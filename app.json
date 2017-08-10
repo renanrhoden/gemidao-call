@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "gemidao-do-zap",
-    "description": "An empty new project",
+    "name": "Gemidão Call",
+    "description": "Ligue para qualquer pessoa simulando qualquer telefone com o gemido do zap",
     "slug": "gemidao-do-zap",
     "privacy": "public",
     "sdkVersion": "19.0.0",
@@ -11,13 +11,17 @@
     "icon": "./assets/icons/app-icon.png",
     "loading": {
       "icon": "./assets/icons/loading-icon.png",
-      "hideExponentText": false
+      "hideExponentText": true
     },
     "packagerOpts": {
       "assetExts": ["ttf", "mp4"]
     },
     "ios": {
+      "bundleIdentifier": "com.renanrhoden.gemidaocall",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.renanrhoden.gemidaocall"
     }
   }
 }
