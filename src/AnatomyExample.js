@@ -20,14 +20,26 @@ import agent from 'superagent';
 import promisifyAgent from 'superagent-promise';
 import Banner from './Banner';
 import {Alert, Linking} from 'react-native';
+import {FacebookAds} from 'expo';
 
 export default class AnatomyExample extends Component {
     constructor(props) {
         super(props);
-        this.state = {de: '', para: '', token: '', sms: false}
+        this.state = {de: '', para: '', token: '', sms: false, cont: 0}
     }
 
     gemidao = () => {
+
+        this.setState({cont: (this.state.cont + 1)});
+        console.log(this.state.cont);
+        if ((this.state.cont % 2) !== 0) {
+            FacebookAds.InterstitialAdManager.showAd('1175457135931729_1175703245907118')
+                .then(didClick => {
+                })
+                .catch(error => {
+                    console.log(error + error.message())
+                })
+        }
         if (!/^[a-f0-9]{32}$/.test(this.state.token)) {
             console.log('Token inválido. Obtenha um em https://totalvoice.com.br');
             Alert.alert(
@@ -36,8 +48,9 @@ export default class AnatomyExample extends Component {
                 [
                     {text: 'OK', onPress: () => console.log('OK Pressed')},
                 ],
-                { cancelable: false }
+                {cancelable: false}
             )
+            return;
         }
 
         if (!/^[0-9]{10,11}$/.test(this.state.para)) {
@@ -48,24 +61,26 @@ export default class AnatomyExample extends Component {
                 [
                     {text: 'OK', onPress: () => console.log('OK Pressed')},
                 ],
-                { cancelable: false }
-            )
+                {cancelable: false}
+            );
+            return;
         }
 
         const action = this.state.sms
             ? sms(this.state.para, this.state.token)
             : call(this.state.de, this.state.para, this.state.token);
 
-        Alert.alert(
-            'yey',
-            'Gemidão enviado',
-            [
-                {text: 'OK', onPress: () => console.log('OK Pressed')},
-            ],
-            { cancelable: false }
-        );
-
         return action
+            .then(() => {
+                Alert.alert(
+                    'yey',
+                    'Gemidão enviado',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                    {cancelable: false}
+                );
+            })
             .catch(err => {
                 if (err.status === 405 || err.status === 403) {
                     console.log(err.body || err.response.body.mensagem);
@@ -80,11 +95,11 @@ export default class AnatomyExample extends Component {
         return (
             <Container>
                 <Header>
-                    <Left/>
-                    <Body>
-                    <Title>Gemidão do Zap</Title>
+                    <Body full>
+                    <Title style={{paddingTop: 20}}>
+                        Gemidão do Zap
+                    </Title>
                     </Body>
-                    <Right/>
                 </Header>
                 <Content>
                     <Item regular>
@@ -110,19 +125,27 @@ export default class AnatomyExample extends Component {
                             value={this.state.token}
                         />
                     </Item>
-                    <Item regular>
                     <Button full onPress={this.gemidao}>
                         <Text>Enviar</Text>
                     </Button>
-                    </Item>
+                    <Banner placementId="1175457135931729_1175460135931429"/>
                 </Content>
+                {/*<Banner placementId="1175457135931729_1175460135931429" />*/}
                 <Footer>
                     <FooterTab>
-                        <Button full onPress={() => Linking.openURL('http://www.totalvoice.com.br')}>
+                        <Button full onPress={() => {
+                            Alert.alert(
+                                'Atenção',
+                                'Você será redirecionado ao site do TotalVoice. Crie uma conta gratuita para receber seu token e usá-lo no app',
+                                [
+                                    {text: 'OK', onPress: () => Linking.openURL('http://www.totalvoice.com.br')},
+                                ],
+                                {cancelable: false}
+                            );
+                        }}>
                             <Text>Obtenha um token</Text>
                         </Button>
                     </FooterTab>
-                    <Banner placementId="1175457135931729_1175460135931429" />
                 </Footer>
             </Container>
         );
