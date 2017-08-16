@@ -129,6 +129,8 @@ export default class AnatomyExample extends Component {
                         <Text>Enviar</Text>
                     </Button>
                     <Banner placementId="1175457135931729_1175460135931429"/>
+                    <Text> Infelizmente o Total Voice acabou com a brincadeira e no momento estao pedindo varios dados para criação da conta e não estão dando credito de teste. Foi bom enquanto durou :/</Text>
+
                 </Content>
                 {/*<Banner placementId="1175457135931729_1175460135931429" />*/}
                 <Footer>
